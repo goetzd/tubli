@@ -39,7 +39,7 @@ export default class Disconnect extends Command {
       }
       await waitUntil(() => executeTunnelblick(TunnelblickCommand.STATE_OF_ALL_CONFIGURATIONS), /^(EXITING(, )?)+$/)
       if (!quiet) {
-        await cli.action.stop(`✔ ${vpn} disconnected.`)
+        await cli.action.stop('✔ disconnected.')
       }
     }
   }
@@ -55,7 +55,7 @@ export default class Disconnect extends Command {
       this.error('Must specify a VPN configuration or use flag --all!')
     }
 
-    const configuration = flags.all ? 'all' : `"${args.vpn}"`
+    const configuration = flags.all ? 'all' : `\\"${args.vpn}\\"`
     await this.disconnectTunnelblick(configuration, !flags['no-wait'], flags.quiet)
   }
 }
