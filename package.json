@@ -12,6 +12,7 @@
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.2",
     "shelljs": "^0.8.4",
+    "cli-ux": "^5.5.1",
     "tslib": "^1.14.1"
   },
   "devDependencies": {

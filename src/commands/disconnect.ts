@@ -1,5 +1,6 @@
 import {executeTunnelblick, TunnelblickCommand, waitUntil} from '../tunnelblick-commands'
 import {Command, flags} from '@oclif/command'
+import {cli} from 'cli-ux'
 
 export default class Disconnect extends Command {
   static description = 'disconnects active VPN sessions'
@@ -21,14 +22,25 @@ export default class Disconnect extends Command {
       description: 'do not wait until disconnect is successful',
       default: false,
     }),
+    quiet: flags.boolean({
+      char: 'q',
+      description: 'mute all output',
+      default: false,
+    }),
   }
 
   static args = [{name: 'vpn'}]
 
-  async disconnectTunnelblick(vpn: string, wait: boolean) {
+  async disconnectTunnelblick(vpn: string, wait: boolean, quiet: boolean) {
     executeTunnelblick(TunnelblickCommand.DISCONNECT, vpn)
     if (wait) {
-      waitUntil(() => executeTunnelblick(TunnelblickCommand.STATE_OF_ALL_CONFIGURATIONS), /^(EXITING(, )?)+$/)
+      if (!quiet) {
+        await cli.action.start('⏳ Waiting for disconnect to finish...')
+      }
+      await waitUntil(() => executeTunnelblick(TunnelblickCommand.STATE_OF_ALL_CONFIGURATIONS), /^(EXITING(, )?)+$/)
+      if (!quiet) {
+        await cli.action.stop(`✔ ${vpn} disconnected.`)
+      }
     }
   }
 
@@ -44,6 +56,6 @@ export default class Disconnect extends Command {
     }
 
     const configuration = flags.all ? 'all' : `"${args.vpn}"`
-    await this.disconnectTunnelblick(configuration, !flags['no-wait'])
+    await this.disconnectTunnelblick(configuration, !flags['no-wait'], flags.quiet)
   }
 }

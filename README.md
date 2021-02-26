@@ -63,6 +63,7 @@ OPTIONS
   -a, --all      disconnect all configurations
   -h, --help     show CLI help
   -n, --no-wait  do not wait until disconnect is successful
+  -q, --quiet    mute all output
 
 EXAMPLES
   $ shaft disconnect "MyShinyVPN"
